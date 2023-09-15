@@ -1,6 +1,7 @@
 import os
-import sys
 import subprocess
+import sys
+
 
 def check_dependency(command, install_instruction):
     try:
@@ -10,12 +11,14 @@ def check_dependency(command, install_instruction):
         print(f"Missing dependency. Please install it using: {install_instruction}")
         return False
 
+
 # Create GitHub Actions Workflow YAML
 def create_github_actions_workflow(folder):
-    github_folder = os.path.join(folder, '.github', 'workflows')
+    github_folder = os.path.join(folder, ".github", "workflows")
     os.makedirs(github_folder, exist_ok=True)
-    with open(os.path.join(github_folder, 'python_linting.yml'), 'w') as f:
-        f.write('''name: Python Linting
+    with open(os.path.join(github_folder, "python_linting.yml"), "w") as f:
+        f.write(
+            """name: Python Linting
 
 on:
   pull_request:
@@ -42,21 +45,28 @@ jobs:
 
     - name: Run Black
       run: black . --check
-''')
+"""
+        )
     print("Created GitHub Actions Workflow")
+
 
 # Create isort.cfg
 def create_isort_cfg(folder):
-    with open(os.path.join(folder, 'isort.cfg'), 'w') as f:
-        f.write('''[settings]
+    with open(os.path.join(folder, "isort.cfg"), "w") as f:
+        f.write(
+            """[settings]
 profile = black
-''')
+"""
+        )
     print("Created isort.cfg file")
+
 
 # Check for dependencies
 if not check_dependency(["git", "--version"], "Install Git from https://git-scm.com/"):
     sys.exit(1)
-if not check_dependency(["virtualenv", "--version"], "Install virtualenv using: pip install virtualenv"):
+if not check_dependency(
+    ["virtualenv", "--version"], "Install virtualenv using: pip install virtualenv"
+):
     sys.exit(1)
 
 # Check for correct number of arguments
