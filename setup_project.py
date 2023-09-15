@@ -98,7 +98,7 @@ with open(".gitignore", "w") as f:
     f.write("venv\n__pycache__\n")
 print("Created .gitignore file")
 
-with open("requirements.txt", "w") as f:
+with open('requirements.txt', "w") as f:
     f.write("# Add your requirements here\n")
 print("Created requirements.txt file")
 
