@@ -10,6 +10,49 @@ def check_dependency(command, install_instruction):
         print(f"Missing dependency. Please install it using: {install_instruction}")
         return False
 
+# Create GitHub Actions Workflow YAML
+def create_github_actions_workflow(folder):
+    github_folder = os.path.join(folder, '.github', 'workflows')
+    os.makedirs(github_folder, exist_ok=True)
+    with open(os.path.join(github_folder, 'python_linting.yml'), 'w') as f:
+        f.write('''name: Python Linting
+
+on:
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install isort black
+
+    - name: Run isort
+      run: isort . --check
+
+    - name: Run Black
+      run: black . --check
+''')
+    print("Created GitHub Actions Workflow")
+
+# Create isort.cfg
+def create_isort_cfg(folder):
+    with open(os.path.join(folder, 'isort.cfg'), 'w') as f:
+        f.write('''[settings]
+profile = black
+''')
+    print("Created isort.cfg file")
+
 # Check for dependencies
 if not check_dependency(["git", "--version"], "Install Git from https://git-scm.com/"):
     sys.exit(1)
@@ -48,5 +91,9 @@ print("Created .gitignore file")
 with open("requirements.txt", "w") as f:
     f.write("# Add your requirements here\n")
 print("Created requirements.txt file")
+
+# Create GitHub Actions Workflow and isort.cfg
+create_github_actions_workflow(os.getcwd())
+create_isort_cfg(os.getcwd())
 
 print("Project setup completed successfully!")
